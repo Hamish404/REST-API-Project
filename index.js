@@ -12,7 +12,7 @@ const API_URL = "https://secrets-api.appbrewery.com";
 // https://secrets-api.appbrewery.com/
 
 //TODO 1: Add your own bearer token from the previous lesson.
-const yourBearerToken = "";
+const yourBearerToken = "0c60888b-20bb-4352-9952-3c56fe9ba92e";
 const config = {
   headers: { Authorization: `Bearer ${yourBearerToken}` },
 };
@@ -34,12 +34,29 @@ app.post("/get-secret", async (req, res) => {
 });
 
 app.post("/post-secret", async (req, res) => {
-  // TODO 2: Use axios to POST the data from req.body to the secrets api servers.
+  const body = { secret: req.body.secret, score: req.body.score };
+
+  try {
+    const result = await axios.post(API_URL + "/secrets/", body, config);
+    res.render("index.ejs", { content: JSON.stringify(result.data) });
+  } catch (error) {
+    res.render("index.ejs", { content: JSON.stringify(error.response.data) });
+  }
+ 
 });
 
 app.post("/put-secret", async (req, res) => {
   const searchId = req.body.id;
+  const body = { secret: req.body.secret, score: req.body.score }
   // TODO 3: Use axios to PUT the data from req.body to the secrets api servers.
+  // axios.put(url[, data[, config]])
+
+  try {
+    const result = await axios.put(API_URL + "/secrets/" + searchId, body, config);
+    res.render("index.ejs", { content: JSON.stringify(result.data) });
+  } catch (error) {
+    res.render("index.ejs", { content: JSON.stringify(error.response.data) });
+  }
 });
 
 app.post("/patch-secret", async (req, res) => {
